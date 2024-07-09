@@ -10,6 +10,7 @@ const Editor = lazy(() => import("@/view/editor"));
 const Note = lazy(() => import("@/view/editor/note"));
 const EditorNote = lazy(() => import("@/view/editor/note/editorNote"));
 const Template = lazy(() => import("@/view/editor/template"));
+const EditTemplate = lazy(() => import("@/view/editor/template/editTemplate"));
 
 const Manager = lazy(() => import("@/view/manager"));
 const Message = lazy(() => import("@/view/manager/message"));
@@ -32,6 +33,7 @@ const routerComponents: { [key: string]: JSX.Element } = {
   template: <Template />,
   note: <Note />,
   editorNote: <EditorNote />,
+  editTemplate: <EditTemplate />,
   //管理
   manager: <Manager />,
   spider: <Spider />,
