@@ -23,6 +23,7 @@ const ModalList = memo(
       sort: 0,
       status: 1,
       blank: 1,
+      closeMenu: 1,
       description: "",
     };
 
@@ -104,6 +105,12 @@ const ModalList = memo(
               </Radio.Group>
             </Form.Item>
             <Form.Item label="是否展示菜单" name="blank">
+              <Radio.Group>
+                <Radio value={1}>展示</Radio>
+                <Radio value={0}>隐藏</Radio>
+              </Radio.Group>
+            </Form.Item>
+            <Form.Item label="是否展示所有菜单" name="closeMenu">
               <Radio.Group>
                 <Radio value={1}>展示</Radio>
                 <Radio value={0}>隐藏</Radio>

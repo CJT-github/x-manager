@@ -111,7 +111,7 @@ function Menus() {
 
   async function getMenusListFn() {
     setLoading(true);
-    const res = await getMenusList({ role: 3, level, pid, handle: type });
+    const res = await getMenusList({ level, pid, handle: type });
     if (res && Object.keys(res).length) {
       setDataSource(res.data.data);
       setPid(res.data.pid);

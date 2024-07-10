@@ -1,4 +1,4 @@
-import { memo, useEffect, useState } from "react";
+import { memo, useEffect, useRef, useState } from "react";
 import type { MenuProps } from "antd";
 import { Layout, Menu, Skeleton, theme } from "antd";
 import ContentLayout from "./content";
@@ -6,7 +6,12 @@ import { useDispatch } from "react-redux";
 import { changeMenu, changeLoading } from "@/store/basicMassage";
 import { getMenus } from "@/api/login";
 import { handleMenus } from "@/utils";
-import { useLocation, useNavigate } from "react-router-dom";
+import {
+  useLocation,
+  useMatch,
+  useMatches,
+  useNavigate,
+} from "react-router-dom";
 import { RootState } from "@/store/store";
 import { useAppSelector } from "@/store/hook";
 
@@ -48,14 +53,17 @@ const SliderLayout = memo(() => {
   const [option, setOption] = useState<MenuProps["items"]>([]);
   const path = useLocation();
   const [current, setCurrent] = useState(getCurrentPath(path.pathname));
+  const source = useRef([]);
+  const [close, setClose] = useState(false);
 
   const navigator = useNavigate();
   const dispatch = useDispatch();
 
   const getMenuFn = async () => {
     dispatch(changeLoading(true));
-    const res = await getMenus({ role: 3 });
+    const res = await getMenus();
     if (res && Object.keys(res).length) {
+      source.current = res.data;
       let result = handleMenus(res.data);
       let mapMenu = customMenus(result);
       setOption(mapMenu);
@@ -78,6 +86,16 @@ const SliderLayout = memo(() => {
   useEffect(() => {
     getMenuFn();
   }, []);
+  // item.routerPath == path.pathname;
+  useEffect(() => {
+    if (source.current.length) {
+      let data: any = source.current.filter(
+        (item: any) => item.routerPath == path.pathname
+      );
+      setClose(data.closeMenu == 0);
+      console.log(data, path);
+    }
+  }, [path]);
 
   const {
     token: { colorBgContainer },
@@ -85,23 +103,26 @@ const SliderLayout = memo(() => {
 
   return (
     <Layout>
-      <Sider
-        width={200}
-        style={{ background: colorBgContainer }}
-        className="p-[10px]"
-      >
-        {loading ? (
-          <Skeleton />
-        ) : (
-          <Menu
-            mode="inline"
-            selectedKeys={[current]}
-            style={{ height: "100%", borderRight: 0 }}
-            items={option}
-            onClick={onClick}
-          />
-        )}
-      </Sider>
+      {close || (
+        <Sider
+          width={200}
+          style={{ background: colorBgContainer }}
+          className="p-[10px]"
+        >
+          {loading ? (
+            <Skeleton />
+          ) : (
+            <Menu
+              mode="inline"
+              selectedKeys={[current]}
+              style={{ height: "100%", borderRight: 0 }}
+              items={option}
+              onClick={onClick}
+            />
+          )}
+        </Sider>
+      )}
+
       <ContentLayout />
     </Layout>
   );
